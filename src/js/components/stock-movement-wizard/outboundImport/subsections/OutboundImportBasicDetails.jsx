@@ -8,6 +8,7 @@ import DateField from 'components/form-elements/v2/DateField';
 import SelectField from 'components/form-elements/v2/SelectField';
 import TextInput from 'components/form-elements/v2/TextInput';
 import Subsection from 'components/Layout/v2/Subsection';
+import StockMovementDirection from 'consts/StockMovementDirection';
 import { debounceLocationsFetch, debouncePeopleFetch } from 'utils/option-utils';
 import { FormErrorPropType } from 'utils/propTypes';
 
@@ -19,6 +20,17 @@ const OutboundImportBasicDetails = ({ control, errors }) => {
     debounceTime: state.session.searchConfig.debounceTime,
     minSearchLength: state.session.searchConfig.minSearchLength,
   }));
+
+  const loadOutboundLocations = debounceLocationsFetch(
+    debounceTime,
+    minSearchLength,
+    null,
+    false,
+    false,
+    true,
+    false,
+    StockMovementDirection.OUTBOUND,
+  );
 
   return (
     <Subsection
@@ -32,7 +44,10 @@ const OutboundImportBasicDetails = ({ control, errors }) => {
             control={control}
             render={({ field }) => (
               <TextInput
-                title={{ id: 'react.outboundImport.form.description.title', defaultMessage: 'Description' }}
+                title={{
+                  id: 'react.outboundImport.form.description.title',
+                  defaultMessage: 'Description',
+                }}
                 errorMessage={errors.description?.message}
                 required
                 {...field}
@@ -46,13 +61,16 @@ const OutboundImportBasicDetails = ({ control, errors }) => {
             control={control}
             render={({ field }) => (
               <SelectField
-                title={{ id: 'react.outboundImport.form.origin.title', defaultMessage: 'Origin' }}
+                title={{
+                  id: 'react.outboundImport.form.origin.title',
+                  defaultMessage: 'Origin',
+                }}
                 placeholder="Select Origin"
                 required
                 hasErrors={Boolean(errors.origin?.message)}
                 errorMessage={errors.origin?.message}
                 async
-                loadOptions={debounceLocationsFetch(debounceTime, minSearchLength)}
+                loadOptions={loadOutboundLocations}
                 {...field}
               />
             )}
@@ -64,13 +82,16 @@ const OutboundImportBasicDetails = ({ control, errors }) => {
             control={control}
             render={({ field }) => (
               <SelectField
-                title={{ id: 'react.outboundImport.form.destination.title', defaultMessage: 'Destination' }}
+                title={{
+                  id: 'react.outboundImport.form.destination.title',
+                  defaultMessage: 'Destination',
+                }}
                 placeholder="Select Destination"
                 required
                 hasErrors={Boolean(errors.destination?.message)}
                 errorMessage={errors.destination?.message}
                 async
-                loadOptions={debounceLocationsFetch(debounceTime, minSearchLength)}
+                loadOptions={loadOutboundLocations}
                 {...field}
               />
             )}
